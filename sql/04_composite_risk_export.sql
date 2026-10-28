@@ -61,7 +61,7 @@ SELECT
     (e.performance_rating = 4)::int            AS high_performer_flag,
     (e.overtime = 'Yes')::int                  AS overtime_flag,
     (e.years_since_last_promotion >= 3)::int   AS promo_stagnation_flag,
-    (e.years_with_curr_manager <= 1)::int      AS new_manager_flag,
+    (e.years_with_curr_manager = 0)::int       AS new_manager_flag,
     (e.monthly_income < lp.median_income)::int AS below_level_median_pay_flag,
 
     -- Readable bands for slicers/axes
@@ -73,8 +73,8 @@ SELECT
          WHEN e.years_since_last_promotion <= 2 THEN '1-2 yrs'
          WHEN e.years_since_last_promotion <= 4 THEN '3-4 yrs'
          ELSE '5+ yrs' END AS promo_gap_band,
-    CASE WHEN e.years_with_curr_manager <= 1 THEN '0-1 yrs'
-         WHEN e.years_with_curr_manager <= 4 THEN '2-4 yrs'
+    CASE WHEN e.years_with_curr_manager <= 1 THEN 'New (0 yrs)'
+         WHEN e.years_with_curr_manager <= 4 THEN '1-4 yrs'
          ELSE '5+ yrs' END AS manager_tenure_band,
     CASE WHEN e.performance_rating = 4 THEN 'High (4)' ELSE 'Solid (3)' END AS performance_label
 FROM hr.employees_raw e
