@@ -45,7 +45,7 @@ Rows: 1,470 employees. Overall attrition: 16.1% (237 leavers).
 | high_performer_flag | 1 if performance_rating = 4 | Only 3 and 4 exist; rating 4 = 226 employees (15.4%) |
 | overtime_flag | 1 if overtime = 'Yes' | Attrition 30.5% with overtime vs 10.4% without (n = 416 vs 1,054) |
 | promo_stagnation_flag | 1 if years_since_last_promotion >= 3 | Kept for reference only. Tested and rejected: no relationship with attrition (13.7% flagged vs 17.0% not flagged; no trend by year). Not used in the risk score. |
-| new_manager_flag | 1 if years_with_curr_manager = 0 | Attrition 32.3% at 0 yrs (n = 263) vs 12.6% at 1+ yrs. Year 1 (14.5%) is at baseline, so the threshold is 0, not <= 1. Overlaps with new hires. |
+| new_manager_flag | 1 if years_with_curr_manager = 0 | 77% of flagged employees are first-year staff (<= 1 yr at company); for established staff the effect is 22.9% vs 12.4% (n = 61) |
 | below_level_median_pay_flag | 1 if income < median income for the same job_level | Fair-pay comparison within level |
 | tenure_band | 0-1 / 2-4 / 5-9 / 10+ yrs at company | For slicers and chart axes |
 | promo_gap_band | Promoted this year / 1-2 / 3-4 / 5+ yrs | For slicers and chart axes |
