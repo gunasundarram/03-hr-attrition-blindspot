@@ -62,7 +62,8 @@ Points are proportional to each driver's observed attrition lift (percentage poi
 3. **Power BI / DAX**: calculated columns for flags, score, band and recommended action; measures for rates, cohort slices and dynamic chart titles; conditional formatting driven by a DAX colour measure.
 
 ## Links
-- ![**Live dashboard**](powerbi/dashboard_walkthrough.mp4)
+https://github.com/user-attachments/assets/2b51f5ca-fa80-4b3d-adaa-a0b8aaa67bf6
+
 
 ## Limitations (read before quoting any number)
 - **Synthetic dataset** created by IBM data scientists. Findings are illustrative, not real-company evidence.
