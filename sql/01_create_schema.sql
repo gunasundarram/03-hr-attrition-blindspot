@@ -1,3 +1,11 @@
+-- ============================================================================
+-- Project 03: The Attrition Blindspot
+-- 01_create_schema.sql
+-- Creates the hr schema and the raw landing table (35 columns, same order as
+-- the Kaggle CSV: WA_Fn-UseC_-HR-Employee-Attrition.csv).
+-- Run once in pgAdmin (Query Tool) connected to the database hr_attrition.
+-- ============================================================================
+
 CREATE SCHEMA IF NOT EXISTS hr;
 
 DROP TABLE IF EXISTS hr.employees_raw;
