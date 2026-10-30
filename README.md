@@ -61,6 +61,9 @@ Points are proportional to each driver's observed attrition lift (percentage poi
 2. **Threshold testing changed the design**: the planned `<= 1 year` new-manager flag was dropped to `= 0` after the data showed year 1 sits at baseline; the planned promotion-stagnation driver was removed after showing no relationship.
 3. **Power BI / DAX**: calculated columns for flags, score, band and recommended action; measures for rates, cohort slices and dynamic chart titles; conditional formatting driven by a DAX colour measure.
 
+## Links
+- ![**Live dashboard**](powerbi/dashboard_walkthrough.mp4)
+
 ## Limitations (read before quoting any number)
 - **Synthetic dataset** created by IBM data scientists. Findings are illustrative, not real-company evidence.
 - **Score weights were fitted on the same 1,470 records they are tested on.** It is a prioritisation tool, not a validated forecast. A fair test would need a hold-out set or a second year of data.
