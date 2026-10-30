@@ -1,4 +1,4 @@
-# 🔴 The Attrition Blindspot: Why High Performers Leave Before HR Notices
+# 🔴 The Attrition Blindspot: Why Ratings Miss Flight Risk
 
 > **Project 03** | Power BI · DAX · PostgreSQL · IBM HR Analytics Dataset
 
