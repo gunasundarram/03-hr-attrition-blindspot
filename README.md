@@ -18,7 +18,7 @@ Which combination of performance rating, overtime, promotion history and manager
 | 5 | **The "new manager" effect is mostly a first-year-employee effect.** | 77% of staff in their first year with a manager are first-year employees. First-year staff leave at 34.9% (n = 215). Established staff with a new manager: 23.0% (n = 61) vs 12.4% with the same manager. |
 | 6 | **Promotion gap does not predict attrition here.** | 13.7% for 3+ years since promotion vs 17.0% for under 3; no trend by year. Tested and rejected. |
 | 7 | **A transparent 0-100 risk score separates attrition by 10.6x.** | Low band 4.8% vs Critical band 51.2%. |
-| 8 | **214 current employees sit in the High or Critical bands** (30 are high performers). | The largest pool is Research Scientist (57). Sales Representatives have the highest historic attrition (39.8%) but only 11 remain at risk, because most have already left. |
+| 8 | **214 records labelled Attrition = No fall into the High or Critical heuristic-score bands** (30 are high performers). | The largest group of non-attrited records with High or Critical scores is Research Scientist (57). Sales Representatives have the highest observed attrition rate (39.8%), but only 11 records labelled Attrition = No fall into the High or Critical bands. |
 
 ## The performance paradox
 Averaged together, high performers and everyone else look identical, which is exactly why rating-based HR reports see nothing. Splitting by workload shows opposite effects that cancel out: high performers are *more* stable than others when not overworked (8.7% vs 10.8%) and *less* stable when overworked (35.4% vs 29.6%). The second gap is small-sample and should be read as directional; the robust result is the contrast within high performers.
