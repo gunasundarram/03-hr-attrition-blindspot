@@ -107,24 +107,17 @@ SELECT ROUND(100.0 * COUNT(*) FILTER (WHERE years_at_company <= 1) / COUNT(*), 1
 FROM hr.employees_clean
 WHERE new_manager_flag = 1;
 
--- ============ PART G: Non-attrited records with elevated scores (page 5) ====
--- Expected: 214 records | 30 high performers | 139 on overtime | 114 with new manager
---
--- IMPORTANT:
--- These are records labelled Attrition = 'No' in the supplied dataset.
--- They are NOT verified current employees or predicted future leavers.
--- The score is an exploratory heuristic, not a validated predictive model.
-
-SELECT COUNT(*)                                             AS non_attrited_high_or_critical,
+-- ============ PART G: Current at-risk staff (page 5) ========================
+-- Expect: 214 current employees | 30 high performers | 139 on overtime | 114 with new manager
+SELECT COUNT(*)                                             AS current_high_or_critical,
        COUNT(*) FILTER (WHERE high_performer_flag = 1)      AS high_performers,
        COUNT(*) FILTER (WHERE overtime_flag = 1)            AS on_overtime,
        COUNT(*) FILTER (WHERE new_manager_flag = 1)         AS new_manager
 FROM hr.employees_with_score
-WHERE attrition = 'No'
-  AND risk_band IN ('High', 'Critical');
+WHERE attrition = 'No' AND risk_band IN ('High', 'Critical');
 
 -- Where the next leavers are, by job role (expect Research Scientist 57 first)
-SELECT job_role, COUNT(*) AS non_attrited_high_or_critical
+SELECT job_role, COUNT(*) AS current_high_or_critical
 FROM hr.employees_with_score
 WHERE attrition = 'No'
   AND risk_band IN ('High', 'Critical')
