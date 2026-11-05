@@ -9,7 +9,7 @@
 
 ![Executive overview](powerbi/screenshots/page1_executive_overview.png)
 
-▶ **[Watch the 60-second walkthrough](https://drive.google.com/file/d/1VcmbR0Km_ufdjxYmLWkPizaDmutrTWv1/view?usp=drive_link)** · 📄 [Data dictionary](docs/data_dictionary.md) · 🗂 [Power BI file](powerbi/hr_attrition_blindspot.pbix) · 🧮 [SQL scripts](sql/)
+▶ **[Watch the 60-second walkthrough](https://drive.google.com/file/d/1NIY0nbmJo9dHF2iVBnSrmWco169R5M2J/view?usp=drive_link)** · 📄 [Data dictionary](docs/data_dictionary.md) · 🗂 [Power BI file](powerbi/hr_attrition_blindspot.pbix) · 🧮 [SQL scripts](sql/)
 
 ---
 
