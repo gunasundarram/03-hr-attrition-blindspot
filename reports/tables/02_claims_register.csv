@@ -1,0 +1,12 @@
+label,rate_exposed,rate_reference,diff_pp,diff_ci_low_pp,diff_ci_high_pp,p_fisher,q_bh,verdict
+Rating: high performer vs others,0.164,0.161,0.295,-4.47,6.011,0.922,0.922,Not distinguishable from zero
+Overtime vs no overtime,0.305,0.104,20.092,15.416,24.986,0.0,0.0,Supported
+No overtime: high performer vs others,0.087,0.108,-2.055,-6.144,3.631,0.486,0.535,Not distinguishable from zero
+Overtime: high performer vs others,0.354,0.296,5.755,-5.873,18.715,0.38,0.465,Not distinguishable from zero
+High performers: overtime vs none,0.354,0.087,26.689,14.887,39.309,0.0,0.0,Supported
+Other staff: overtime vs none,0.296,0.108,18.879,13.837,24.194,0.0,0.0,Supported
+Overtime + new manager vs everyone else,0.524,0.14,38.462,27.616,49.059,0.0,0.0,Supported
+First-year vs established,0.349,0.129,21.975,15.609,28.787,0.0,0.0,Supported
+Established: new vs same manager,0.23,0.124,10.556,1.575,22.645,0.028,0.045,Supported
+Promotion gap 3+ yrs vs less,0.137,0.17,-3.282,-7.178,1.113,0.143,0.197,Not distinguishable from zero
+Critical band vs Low band (in-sample),0.512,0.048,46.355,37.411,55.088,0.0,0.0,Supported

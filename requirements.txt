@@ -1,0 +1,11 @@
+# Core
+pandas>=2.0
+numpy>=1.26
+matplotlib>=3.8
+ipykernel>=6.29
+nbformat>=5.10
+pytest>=8.0
+# Statistics and validation
+scipy>=1.11
+statsmodels>=0.14
+scikit-learn>=1.3

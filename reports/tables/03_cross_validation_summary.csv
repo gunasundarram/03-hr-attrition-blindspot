@@ -1,0 +1,5 @@
+model,AUC (mean),AUC (std),PR-AUC (mean),PR-AUC (std),Leavers caught in top 23.7% (mean),Leavers caught in top 23.7% (std)
+Points score (re-learned per fold),0.7577,0.037,0.4153,0.0541,0.5526,0.0536
+"Logistic regression, 7 flags",0.7604,0.037,0.4334,0.0541,0.5576,0.0537
+"Logistic regression, all 27 columns",0.8338,0.028,0.6277,0.0473,0.6691,0.0481
+"Gradient boosting, all 27 columns",0.8159,0.033,0.5844,0.062,0.6539,0.0554
