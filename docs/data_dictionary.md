@@ -1,6 +1,6 @@
 # Data Dictionary: The Attrition Blindspot
 
-**Project 03** | IBM HR Analytics Employee Attrition dataset (Kaggle) | PostgreSQL + Power BI (DAX)
+**Project 03 of 4** | IBM HR Analytics Employee Attrition dataset (Kaggle) | PostgreSQL, Power BI (DAX) and Python
 
 > **Synthetic data.** The source dataset was created by IBM data scientists. Every finding in this project is illustrative, not evidence about a real company.
 
@@ -21,9 +21,10 @@
 | 1 | `hr.employees_raw` (table) | `sql/01_create_schema.sql`, `sql/02_load_data.sql` | Raw landing table, unchanged source values |
 | 2 | Quality checks | `sql/03_data_quality_checks.sql` | Profiling before any modelling |
 | 3 | `hr.employees_clean` (view) | `sql/04_composite_risk_export.sql` | Drops unused columns, adds flags and bands |
-| 4 | `hr_attrition_clean.csv` | Export of the view | Input to Power BI |
+| 4 | `hr_attrition_clean.csv` | Export of the view | Input to Power BI and Python |
 | 5 | `hr.employees_with_score` (view) | `sql/05_risk_score_validation.sql` | SQL replica of the DAX score, used to verify dashboard numbers |
 | 6 | `employees` + measures | `powerbi/hr_attrition_blindspot.pbix` | Dashboard, DAX risk score |
+| 7 | Python package and notebooks 01 to 03 | `src/attrition/`, `notebooks/`, `tests/` | Reconciles the SQL and DAX numbers, tests findings statistically, cross-validates the score; reads `hr_attrition_clean.csv` |
 
 ---
 
@@ -38,6 +39,8 @@
 | `performance_rating` values | Only **3** (1,244 employees) and **4** (226 employees). There are no 1s or 2s. |
 | `attrition` values | No = 1,233, Yes = 237 |
 | `overtime` values | No = 1,054, Yes = 416 |
+
+These checks are also enforced in code: `src/attrition/data.py` validates the CSV on every load, and `tests/` re-checks it.
 
 ---
 
@@ -86,10 +89,10 @@ Defined in the view `hr.employees_clean`.
 | Column | Definition | Justification / evidence |
 |---|---|---|
 | `attrition_flag` | 1 if `attrition = 'Yes'`, else 0 | Numeric outcome for averages and DAX |
-| `high_performer_flag` | 1 if `performance_rating = 4` | Only ratings 3 and 4 exist; rating 4 is 226 employees (15.4%). **Scored 0 points:** attrition is 16.4% vs 16.1% for everyone else. |
+| `high_performer_flag` | 1 if `performance_rating = 4` | Only ratings 3 and 4 exist; rating 4 is 226 employees (15.4%). **Scored 0 points:** attrition is 16.4% vs 16.1% for everyone else (gap +0.3 points, 95% CI -4.5 to +6.0). |
 | `overtime_flag` | 1 if `overtime = 'Yes'` | Attrition 30.5% with overtime vs 10.4% without (n = 416 / 1,054). Scored 30 points. |
 | `new_manager_flag` | 1 if `years_with_curr_manager = 0` | Attrition 32.3% at 0 years (n = 263) vs 12.6% at 1+ years. Year 1 (14.5%) is at baseline, so the threshold is `= 0`, not `<= 1`. **77% of flagged employees are first-year staff** (`years_at_company <= 1`); for established staff the effect is 23.0% vs 12.4% (n = 61). Scored 30 points. |
-| `promo_stagnation_flag` | 1 if `years_since_last_promotion >= 3` | **Reference only, not scored.** Tested and rejected: 13.7% flagged vs 17.0% not flagged, and no trend by year. |
+| `promo_stagnation_flag` | 1 if `years_since_last_promotion >= 3` | **Reference only, not scored.** Tested and rejected: 13.7% flagged vs 17.0% not flagged (p = 0.14), and no trend by year. |
 | `below_level_median_pay_flag` | 1 if `monthly_income` is below the median income of the same `job_level` | Fair-pay comparison within level. Attrition 18.4% vs 13.8%. Scored 6 points. |
 | `tenure_band` | `0-1 yrs` / `2-4 yrs` / `5-9 yrs` / `10+ yrs` from `years_at_company` | Slicer and axis grouping |
 | `promo_gap_band` | `Promoted this year` / `1-2 yrs` / `3-4 yrs` / `5+ yrs` from `years_since_last_promotion` | Slicer and axis grouping |
@@ -100,7 +103,7 @@ Defined in the view `hr.employees_clean`.
 
 ## 5. Composite risk score
 
-Points are each driver's observed attrition lift (percentage points), scaled so the total is 100 and rounded.
+Points are each driver's observed attrition lift (percentage points), scaled so the total is 100 and rounded. All five scored drivers survive a Benjamini-Hochberg false-discovery correction (`notebooks/02_statistical_rigour.ipynb`).
 
 | Driver | Definition | Attrition if present vs absent | Lift (pts) | Points |
 |---|---|---|---|---|
@@ -121,7 +124,9 @@ Points are each driver's observed attrition lift (percentage points), scaled so 
 | High | 44 to 59 | 223 | 70 | 31.4% |
 | Critical | 60 and above | 125 | 64 | 51.2% |
 
-Critical-band attrition is 10.6 times the Low band. Current employees (`attrition = 'No'`) in the High or Critical bands: **214** (61 Critical, 153 High).
+Critical-band attrition is 10.6 times the Low band (in-sample). Current employees (`attrition = 'No'`) in the High or Critical bands: **214** (61 Critical, 153 High).
+
+**Cross-validated check** (`notebooks/03_score_validation.ipynb`, 5x5-fold, weights and driver selection re-learned inside every training fold): AUC 0.76 (SD 0.04) on held-out folds vs 0.77 in-sample. Scored on unseen employees the bands give 5.2% / 14.3% / 29.6% / 48.9% attrition (Low to Critical). Band sizes differ from the table above because the weights are re-learned in each fold.
 
 ---
 
@@ -131,8 +136,8 @@ Critical-band attrition is 10.6 times the Low band. Current employees (`attritio
 |---|---|---|
 | `No Stock Options Flag` | 1 if `stock_option_level = 0` | Mirrors `no_stock_options_flag` in `employees_with_score` |
 | `Low Job Satisfaction Flag` | 1 if `job_satisfaction = 1` | Mirrors `low_job_satisfaction_flag` |
-| `Risk Score` | Weighted sum above | Matches `risk_score` in SQL |
-| `Risk Band` | `>= 60` Critical, `>= 44` High, `>= 22` Medium, else Low | Matches `risk_band` in SQL |
+| `Risk Score` | Weighted sum above | Matches `risk_score` in SQL and Python |
+| `Risk Band` | `>= 60` Critical, `>= 44` High, `>= 22` Medium, else Low | Matches `risk_band` in SQL and Python |
 | `Risk Band Order` | 1 to 4 from `Risk Score` | Sort-by column for `Risk Band`. Built from `Risk Score`, never from `Risk Band` (that causes a circular dependency). |
 | `Manager Band Order` | 1 to 3 from `years_with_curr_manager` | Sort-by column for `manager_tenure_band` |
 | `Tenure Group` | `First-year employee` (`years_at_company <= 1`), else `Established, new manager` (`years_with_curr_manager = 0`), else `Established, same manager` | Page 4 decomposition: 215 / 61 / 1,194 employees |
@@ -186,8 +191,24 @@ Page 5 uses page-level filters: `attrition = No` and `Risk Band` in High, Critic
 ## 9. Known limitations
 
 - **Synthetic data**, so no real-world conclusions.
-- **In-sample weights:** the score weights were derived from the same 1,470 records the bands are tested on. The score is a prioritisation tool, not a validated forecast.
+- **Weights fitted on all records:** the dashboard weights were derived from the same 1,470 records the bands are tested on. Cross-validation shows little optimism (AUC 0.76 vs 0.77), but the candidate drivers were chosen while exploring the full data, so the check is still slightly optimistic. The score is a prioritisation tool, not a validated forecast.
+- **Performance paradox not supported:** overtime raises attrition for high performers and others alike; the difference between the two effects is not significant (interaction p = 0.23).
 - **Associations, not causes:** overtime, first-year status and manager change overlap.
-- **Small cells (directional only):** high performers on overtime, 35.4% (n = 65, 23 leavers, margin of error about 12 points); established staff with a new manager, 23.0% (n = 61, 14 leavers). Combinations under about 30 employees are low confidence, for example the 100% cell with n = 1.
-- **Performance rating** has only two values here, so "high performer" means rating 4.
+- **Small cells (imprecise):** high performers on overtime, 35.4% (n = 65, 23 leavers, 95% CI 24.9% to 47.5%); established staff with a new manager, 23.0% (n = 61, 14 leavers, 95% CI 14.2% to 34.9%). Combinations under about 30 employees are low confidence, for example the 100% cell with n = 1.
+- **Low power for the rating comparison:** only gaps of roughly 8 points or more could reliably be detected with 226 high performers. `performance_rating` has only two values here, so "high performer" means rating 4.
 - **Unstated units:** `distance_from_home` and the currency of `monthly_income` are not stated in the source.
+
+---
+
+## 10. Python analysis layer
+
+| Path | Contents |
+|---|---|
+| `src/attrition/data.py` | Loads `hr_attrition_clean.csv` and validates it (1,470 rows, unique IDs, no nulls, 0/1 flags, ratings 3 and 4 only) |
+| `src/attrition/score.py` | The points score and bands, identical to the SQL view `employees_with_score` and the DAX columns |
+| `src/attrition/stats.py` | Wilson and Newcombe intervals, Fisher and chi-square tests, odds ratios, Benjamini-Hochberg correction, bootstrap, power, interaction test |
+| `tests/` | 31 automated tests, including reconciliation with the SQL and dashboard numbers |
+| `reports/figures/` | `01_attrition_by_band.png`, `02_driver_forest_plot.png`, `03_score_validation.png` |
+| `reports/tables/` | `02_claims_register.csv` (each tested claim with interval, p-value and verdict), `03_cross_validation_summary.csv`, `03_permutation_importance.csv` |
+
+Columns added in Python (not stored in the CSV): `no_stock_options_flag`, `low_job_satisfaction_flag`, `risk_score`, `risk_band` (same definitions as sections 5 and 6), and in notebook 03 `age_band` (under 30, 30-39, 40-49, 50+) and `flagged` (1 if High or Critical) for the responsible-use check.
